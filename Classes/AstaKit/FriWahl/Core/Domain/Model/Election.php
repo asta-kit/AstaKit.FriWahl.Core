@@ -58,6 +58,14 @@ class Election {
 	protected $test = FALSE;
 
 	/**
+	 * The votings in this election.
+	 *
+	 * @var Collection<AbstractVoting>
+	 * @ORM\OneToMany(mappedBy="election")
+	 */
+	protected $votings;
+
+	/**
 	 * @var SystemEnvironment
 	 * @Flow\Inject
 	 */
@@ -65,7 +73,7 @@ class Election {
 
 
 	/**
-	 * @param string $name The name
+	 * @param string $name The name of this election.
 	 */
 	public function __construct($name) {
 		$this->name    = $name;
@@ -73,6 +81,7 @@ class Election {
 
 		$this->periods     = new ArrayCollection();
 		$this->ballotBoxes = new ArrayCollection();
+		$this->votings     = new ArrayCollection();
 	}
 
 	/**
@@ -158,6 +167,24 @@ class Election {
 		}
 
 		return FALSE;
+	}
+
+	/**
+	 * Adds a voting to this election.
+	 *
+	 * @param Voting $voting
+	 */
+	public function addVoting(Voting $voting) {
+		$this->votings->add($voting);
+	}
+
+	/**
+	 * Returns all votings for this election.
+	 *
+	 * @return Collection<Voting>
+	 */
+	public function getVotings() {
+		return $this->votings;
 	}
 
 }
