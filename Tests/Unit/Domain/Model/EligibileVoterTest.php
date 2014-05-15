@@ -5,6 +5,8 @@ namespace AstaKit\FriWahl\Core\Tests\Unit\Domain\Model;
  * This script belongs to the TYPO3 Flow package "AstaKit.FriWahl.Core".  *
  *                                                                        *
  *                                                                        */
+
+use AstaKit\FriWahl\Core\Domain\Model\Election;
 use AstaKit\FriWahl\Core\Domain\Model\EligibleVoter;
 use TYPO3\Flow\Tests\UnitTestCase;
 
@@ -17,10 +19,24 @@ use TYPO3\Flow\Tests\UnitTestCase;
 class EligibileVoterTest extends UnitTestCase {
 
 	/**
+	 * @return Election
+	 */
+	protected function getMockedElection() {
+		return $this->getMock('AstaKit\FriWahl\Core\Domain\Model\Election', array(), array(), '', FALSE);
+	}
+
+	/**
+	 * @return EligibleVoter
+	 */
+	protected function createVoterFixture() {
+		return new EligibleVoter($this->getMockedElection(), 'John', 'Doe');
+	}
+
+	/**
 	 * @test
 	 */
 	public function addDiscriminatorAddsDiscriminatorToList() {
-		$voter = new EligibleVoter('John', 'Doe');
+		$voter = $this->createVoterFixture();
 		$voter->addDiscriminator('foo', 'bar');
 
 		$this->assertCount(1, $voter->getDiscriminators());
@@ -30,7 +46,7 @@ class EligibileVoterTest extends UnitTestCase {
 	 * @test
 	 */
 	public function discriminatorCanBeFetchedByIdentifier() {
-		$voter = new EligibleVoter('John', 'Doe');
+		$voter = $this->createVoterFixture();
 		$voter->addDiscriminator('foo', 'bar');
 
 		$this->assertNotNull($voter->getDiscriminator('foo'));
@@ -40,7 +56,7 @@ class EligibileVoterTest extends UnitTestCase {
 	 * @test
 	 */
 	public function hasDiscriminatorReturnsFalseIfNoDiscriminatorHasBeenAdded() {
-		$voter = new EligibleVoter('John', 'Doe');
+		$voter = $this->createVoterFixture();
 
 		$this->assertFalse($voter->hasDiscriminator('foo'));
 	}
@@ -49,7 +65,7 @@ class EligibileVoterTest extends UnitTestCase {
 	 * @test
 	 */
 	public function hasDiscriminatorReturnsTrueAfterDiscriminatorHasBeenAdded() {
-		$voter = new EligibleVoter('John', 'Doe');
+		$voter = $this->createVoterFixture();
 		$voter->addDiscriminator('foo', 'bar');
 
 		$this->assertTrue($voter->hasDiscriminator('foo'));
@@ -59,7 +75,7 @@ class EligibileVoterTest extends UnitTestCase {
 	 * @test
 	 */
 	public function hasDiscriminatorReturnsFalseForOtherIdentifiersAfterDiscriminatorHasBeenAdded() {
-		$voter = new EligibleVoter('John', 'Doe');
+		$voter = $this->createVoterFixture();
 		$voter->addDiscriminator('foo', 'bar');
 
 		$this->assertFalse($voter->hasDiscriminator('baz'));

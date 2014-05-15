@@ -49,16 +49,28 @@ class EligibleVoter {
 	 */
 	protected $discriminators;
 
+	/**
+	 * The election this voter belongs to.
+	 *
+	 * @var Election
+	 * @ORM\ManyToOne(inversedBy="voter")
+	 */
+	protected $election;
+
 
 	/**
+	 * @param Election $election
 	 * @param string $givenName
 	 * @param string $familyName
 	 */
-	public function __construct($givenName, $familyName) {
+	public function __construct($election, $givenName, $familyName) {
 		$this->givenName = $givenName;
 		$this->familyName = $familyName;
 
 		$this->discriminators = new ArrayCollection();
+
+		$this->election = $election;
+		$this->election->addVoter($this);
 	}
 
 	/**
@@ -80,6 +92,15 @@ class EligibleVoter {
 	 */
 	public function getName() {
 		return $this->givenName . ' ' . $this->familyName;
+	}
+
+	/**
+	 * Returns the election this voter belongs to.
+	 *
+	 * @return \AstaKit\FriWahl\Core\Domain\Model\Election
+	 */
+	public function getElection() {
+		return $this->election;
 	}
 
 	/**
