@@ -18,4 +18,13 @@ interface Voting {
 
 	public function setName($name);
 
+	/**
+	 * If the voter has one of the discriminator values of this voting, *allow* participation in the voting
+	 */
+	const DISCRIMINATION_MODE_ALLOW = 1;
+	/**
+	 * If the voter has one of the discriminator values of this voting, *deny* participation in the voting
+	 */
+	const DISCRIMINATION_MODE_DENY = 2;
+
 } 
