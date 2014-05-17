@@ -71,7 +71,7 @@ class Election {
 	/**
 	 * The votings in this election.
 	 *
-	 * @var Collection<AbstractVoting>
+	 * @var Collection<Voting>
 	 * @ORM\OneToMany(mappedBy="election")
 	 */
 	protected $votings;
