@@ -78,6 +78,13 @@ abstract class Voting {
 	}
 
 	/**
+	 * @return \AstaKit\FriWahl\Core\Domain\Model\Election
+	 */
+	public function getElection() {
+		return $this->election;
+	}
+
+	/**
 	 * @param string $name
 	 */
 	public function setName($name) {
@@ -89,6 +96,17 @@ abstract class Voting {
 	 */
 	public function getName() {
 		return $this->name;
+	}
+
+	/**
+	 * Checks if the given voter may participate (vote) in this voting. The check is deferred to the voting access
+	 * manager, which holds instances of all defined voters.
+	 *
+	 * @param EligibleVoter $voter
+	 * @return bool
+	 */
+	public function isAllowedToParticipate(EligibleVoter $voter) {
+		return $this->votingAccessManager->mayParticipate($voter, $this);
 	}
 
 	/**
