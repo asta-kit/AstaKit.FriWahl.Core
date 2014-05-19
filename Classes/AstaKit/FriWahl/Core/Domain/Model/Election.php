@@ -16,6 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Model for an election.
  *
+ * @author Andreas Wolf <andreas.wolf@usta.de>
+ *
  * @Flow\Entity
  */
 class Election {
@@ -44,6 +46,15 @@ class Election {
 	protected $periods = array();
 
 	/**
+	 * The voters allowed to vote in this election.
+	 *
+	 * @var Collection<EligibleVoter>
+	 * @ORM\OneToMany(mappedBy="election")
+	 * @Flow\Lazy
+	 */
+	protected $voters;
+
+	/**
 	 * @var Collection<BallotBox>
 	 * @ORM\OneToMany(mappedBy="election")
 	 */
@@ -58,6 +69,14 @@ class Election {
 	protected $test = FALSE;
 
 	/**
+	 * The votings in this election.
+	 *
+	 * @var Collection<Voting>
+	 * @ORM\OneToMany(mappedBy="election")
+	 */
+	protected $votings;
+
+	/**
 	 * @var SystemEnvironment
 	 * @Flow\Inject
 	 */
@@ -65,7 +84,7 @@ class Election {
 
 
 	/**
-	 * @param string $name The name
+	 * @param string $name The name of this election.
 	 */
 	public function __construct($name) {
 		$this->name    = $name;
@@ -73,6 +92,7 @@ class Election {
 
 		$this->periods     = new ArrayCollection();
 		$this->ballotBoxes = new ArrayCollection();
+		$this->votings     = new ArrayCollection();
 	}
 
 	/**
@@ -158,6 +178,41 @@ class Election {
 		}
 
 		return FALSE;
+	}
+
+	/**
+	 * Adds a voter to this election. Do not call this directly, create a new voter instead. The EligibleVoter
+	 * constructor will then call this method with the newly created object.
+	 *
+	 * @param EligibleVoter $voter
+	 */
+	public function addVoter(EligibleVoter $voter) {
+		$this->voters->add($voter);
+	}
+
+	/**
+	 * @return \Doctrine\Common\Collections\Collection
+	 */
+	public function getVoters() {
+		return $this->voters;
+	}
+
+	/**
+	 * Adds a voting to this election.
+	 *
+	 * @param Voting $voting
+	 */
+	public function addVoting(Voting $voting) {
+		$this->votings->add($voting);
+	}
+
+	/**
+	 * Returns all votings for this election.
+	 *
+	 * @return Collection<Voting>
+	 */
+	public function getVotings() {
+		return $this->votings;
 	}
 
 }
