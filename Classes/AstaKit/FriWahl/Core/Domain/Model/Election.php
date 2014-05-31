@@ -27,8 +27,25 @@ class Election {
 	 *
 	 * @var string
 	 * @Flow\Validate(type="NotEmpty")
+	 * @ORM\Column(unique=true)
 	 */
 	protected $name;
+
+	/**
+	 * An internal identifier for this election; used to e.g. name it for command line scripts. Keep this short and
+	 * simple to save typing on the command line ;-)
+	 *
+	 * We use this as the identity column as it has to be unique and should not be changed afterwards.
+	 *
+	 * @var string
+	 * NOTE: both the Identity and Id annotations are required because Doctrine needs Id to make the column the primary
+	 *       key and use it as the internal identifier. The support for Identity in Flow is probably a bit broken
+	 *       currently, as stated by Christian Müller at <http://www.typo3.net/forum/thematik/zeige/thema/115172/>
+	 * @Flow\Identity
+	 * @ORM\Id
+	 * @ORM\Column(length=40)
+	 */
+	protected $identifier;
 
 	/**
 	 * The date this election was created.
@@ -85,10 +102,12 @@ class Election {
 
 	/**
 	 * @param string $name The name of this election.
+	 * @param string $identifier The name of the identifier.
 	 */
-	public function __construct($name) {
-		$this->name    = $name;
+	public function __construct($name, $identifier) {
+		$this->name = $name;
 		$this->created = new \DateTime();
+		$this->identifier = $identifier;
 
 		$this->periods     = new ArrayCollection();
 		$this->ballotBoxes = new ArrayCollection();
@@ -100,6 +119,13 @@ class Election {
 	 */
 	public function getName() {
 		return $this->name;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getIdentifier() {
+		return $this->identifier;
 	}
 
 	/**
@@ -181,7 +207,7 @@ class Election {
 	}
 
 	/**
-	 * Adds a voter to this election. Do not call this directly, create a new voter instead. The EligibleVoter
+	 * Adds a voter to this election. Do NOT call this directly, create a new voter instead. The EligibleVoter
 	 * constructor will then call this method with the newly created object.
 	 *
 	 * @param EligibleVoter $voter

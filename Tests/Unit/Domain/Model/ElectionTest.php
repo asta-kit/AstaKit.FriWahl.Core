@@ -24,7 +24,7 @@ class ElectionTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @return Election
 	 */
 	protected function createElection() {
-		$election = new Election('');
+		$election = new Election('', '');
 		$this->inject($election, 'systemEnvironment', $this->createMockedSystemEnvironment());
 
 		return $election;

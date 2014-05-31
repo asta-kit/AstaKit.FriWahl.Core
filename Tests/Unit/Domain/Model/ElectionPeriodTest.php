@@ -21,7 +21,7 @@ class ElectionPeriodTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	public function constructorThrowsExceptionIfStartDateIsAfterEndDate() {
 		$this->setExpectedException('InvalidArgumentException');
 
-		new ElectionPeriod(new \DateTime('+10 seconds'), new \DateTime('-10 seconds'), new Election(''));
+		new ElectionPeriod(new \DateTime('+10 seconds'), new \DateTime('-10 seconds'), new Election('', ''));
 	}
 
 	/**
@@ -65,7 +65,7 @@ class ElectionPeriodTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @dataProvider includedPointsInTimeDataProvider
 	 */
 	public function includesReturnsTrueIfGivenPointInTimeIsInPeriod($startDate, $endDate, $dateToTest) {
-		$period = new ElectionPeriod(new \DateTime($startDate), new \DateTime($endDate), new Election(''));
+		$period = new ElectionPeriod(new \DateTime($startDate), new \DateTime($endDate), new Election('', ''));
 
 		$this->assertTrue($period->includes(new \DateTime($dateToTest)));
 	}
@@ -100,7 +100,7 @@ class ElectionPeriodTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @dataProvider notIncludedPointsInTimeDataProvider
 	 */
 	public function includesReturnsFalseIfGivenPointInTimeIsNotInPeriod($startDate, $endDate, $dateToTest) {
-		$period = new ElectionPeriod(new \DateTime($startDate), new \DateTime($endDate), new Election(''));
+		$period = new ElectionPeriod(new \DateTime($startDate), new \DateTime($endDate), new Election('', ''));
 
 		$this->assertFalse($period->includes(new \DateTime($dateToTest)));
 	}
