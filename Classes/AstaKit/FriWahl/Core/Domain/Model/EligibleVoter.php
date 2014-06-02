@@ -70,7 +70,6 @@ class EligibleVoter {
 		$this->discriminators = new ArrayCollection();
 
 		$this->election = $election;
-		$this->election->addVoter($this);
 	}
 
 	/**

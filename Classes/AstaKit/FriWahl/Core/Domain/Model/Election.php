@@ -63,15 +63,6 @@ class Election {
 	protected $periods = array();
 
 	/**
-	 * The voters allowed to vote in this election.
-	 *
-	 * @var Collection<EligibleVoter>
-	 * @ORM\OneToMany(mappedBy="election")
-	 * @Flow\Lazy
-	 */
-	protected $voters;
-
-	/**
 	 * @var Collection<BallotBox>
 	 * @ORM\OneToMany(mappedBy="election")
 	 */
@@ -204,23 +195,6 @@ class Election {
 		}
 
 		return FALSE;
-	}
-
-	/**
-	 * Adds a voter to this election. Do NOT call this directly, create a new voter instead. The EligibleVoter
-	 * constructor will then call this method with the newly created object.
-	 *
-	 * @param EligibleVoter $voter
-	 */
-	public function addVoter(EligibleVoter $voter) {
-		$this->voters->add($voter);
-	}
-
-	/**
-	 * @return \Doctrine\Common\Collections\Collection
-	 */
-	public function getVoters() {
-		return $this->voters;
 	}
 
 	/**
