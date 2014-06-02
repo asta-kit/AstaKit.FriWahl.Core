@@ -6,6 +6,7 @@ namespace AstaKit\FriWahl\Core\Domain\Model;
  *                                                                        *
  *                                                                        */
 
+use AstaKit\FriWahl\Core\Domain\Repository\ElectionRepository;
 use AstaKit\FriWahl\Core\Environment\SystemEnvironment;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -89,6 +90,12 @@ class Election {
 	 * @Flow\Inject
 	 */
 	protected $systemEnvironment;
+
+	/**
+	 * @var ElectionRepository
+	 * @Flow\Inject
+	 */
+	protected $electionRepository;
 
 
 	/**
@@ -195,6 +202,13 @@ class Election {
 		}
 
 		return FALSE;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getVoterCount() {
+		return $this->electionRepository->countVotersByElection($this);
 	}
 
 	/**
