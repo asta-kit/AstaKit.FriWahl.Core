@@ -94,6 +94,14 @@ abstract class Voting {
 	}
 
 	/**
+	 * Returns the type of this record. This is made abstract so that it's really clear for people writing new
+	 * derived classes that this has to be implemented.
+	 *
+	 * @return string
+	 */
+	abstract public function getType();
+
+	/**
 	 * @return \AstaKit\FriWahl\Core\Domain\Model\Election
 	 */
 	public function getElection() {
