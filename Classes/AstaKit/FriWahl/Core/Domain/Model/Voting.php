@@ -58,6 +58,18 @@ abstract class Voting {
 	const DISCRIMINATION_MODE_ALLOW = 1;
 	const DISCRIMINATION_MODE_DENY = 2;
 
+	/**
+	 * The group this voting belongs to.
+	 *
+	 * If this is set, $election must be NULL (the relation to the election is implicitly defined via the group then).
+	 *
+	 * @var VotingGroup
+	 * @ORM\ManyToOne(inversedBy="votings")
+	 * @ORM\Column(name="votinggroup")
+	 * NOTE: This field should be named $group, but currently Doctrine/Flow do not support naming a relation column
+	 * different than the field (and "group" is a reserved SQL keyword).
+	 */
+	protected $votingGroup;
 
 	/**
 	 * @var VotingAccessManager
@@ -67,11 +79,15 @@ abstract class Voting {
 
 
 	/**
-	 * @param Election $election
+	 * @param VotingsContainer $container The container (Election or VotingGroup) this voting belongs to
 	 * @param string $name
 	 */
-	public function __construct(Election $election, $name) {
-		$this->election = $election;
+	public function __construct(VotingsContainer $container, $name) {
+		if ($container instanceof VotingGroup) {
+			$this->votingGroup = $container;
+		} else {
+			$this->election = $container;
+		}
 		$this->name = $name;
 
 		$this->election->addVoting($this);
@@ -149,6 +165,20 @@ abstract class Voting {
 	 */
 	public function getDiscriminationMode() {
 		return $this->discriminationMode;
+	}
+
+	/**
+	 * @param \AstaKit\FriWahl\Core\Domain\Model\VotingGroup $group
+	 */
+	public function setGroup($group) {
+		$this->votingGroup = $group;
+	}
+
+	/**
+	 * @return \AstaKit\FriWahl\Core\Domain\Model\VotingGroup
+	 */
+	public function getGroup() {
+		return $this->votingGroup;
 	}
 
 }

@@ -21,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @Flow\Entity
  */
-class Election {
+class Election implements VotingsContainer {
 
 	/**
 	 * The name of this election.

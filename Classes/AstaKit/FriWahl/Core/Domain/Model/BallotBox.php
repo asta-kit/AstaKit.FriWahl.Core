@@ -15,6 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * What is basically modelled here is a state machine, with different
  *
+ * @author Andreas Wolf <andreas.wolf@usta.de>
+ *
  * @Flow\Entity
  */
 class BallotBox {

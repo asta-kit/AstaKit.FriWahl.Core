@@ -6,6 +6,7 @@ namespace AstaKit\FriWahl\Core\Domain\Model;
  *                                                                        *
  *                                                                        */
 
+use Doctrine\Common\Collections\ArrayCollection;
 use TYPO3\Flow\Annotations as Flow;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,22 +22,39 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @Flow\Entity
  */
-class VotingGroup extends Voting {
+class VotingGroup extends Voting implements VotingsContainer {
 
 	/**
 	 * The votings that are part of this group.
 	 *
 	 * @var Collection<Voting>
-	 *
-	 * This is mapped as many-to-many though it is a one-to-many relation in fact (each voting may only be part of
-	 * one voting group) because Doctrine currently only supports using an MM-table when having many-to-many relations.
-	 * We need the MM table because we do not want to explicitly store the group in the voting (making this effectively
-	 * a unidirectional relation).
-	 * The additional unique constraint makes sure that a voting is only part of one group at a time.
-	 * @ORM\ManyToMany
-	 * @ORM\JoinTable(inverseJoinColumns={@ORM\JoinColumn(unique=true)})
+	 * @ORM\OneToMany(mappedBy="votingGroup")
 	 */
 	protected $votings;
+
+	public function __construct(VotingsContainer $container, $name) {
+		// TODO check if container is an Election – we don't support multiple nestings for voting groups
+		parent::__construct($container, $name);
+
+		$this->votings = new ArrayCollection();
+	}
+
+
+	/**
+	 * @return \Doctrine\Common\Collections\Collection
+	 */
+	public function getVotings() {
+		return $this->votings;
+	}
+
+	/**
+	 * @param Voting $voting
+	 * @return void
+	 */
+	public function addVoting(Voting $voting) {
+		$this->votings->add($voting);
+		$voting->setGroup($this);
+	}
 
 	/**
 	 * Returns the type of this record.
