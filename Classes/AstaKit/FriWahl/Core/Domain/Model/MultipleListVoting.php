@@ -31,8 +31,8 @@ class MultipleListVoting extends Voting {
 	 */
 	protected $lists;
 
-	public function __construct(VotingsContainer $container, $name) {
-		parent::__construct($container, $name);
+	public function __construct($name, Election $election = NULL, VotingGroup $votingGroup = NULL) {
+		parent::__construct($name, $election, $votingGroup);
 
 		$this->lists = new ArrayCollection();
 	}

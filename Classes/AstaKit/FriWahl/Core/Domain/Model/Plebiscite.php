@@ -31,7 +31,8 @@ class Plebiscite extends Voting {
 	/**
 	 * @return Plebiscite
 	 */
-	public function __construct() {
+	public function __construct($name, Election $election = NULL, VotingGroup $votingGroup = NULL) {
+		parent::__construct($name, $election, $votingGroup);
 		$this->questions = new ArrayCollection();
 	}
 

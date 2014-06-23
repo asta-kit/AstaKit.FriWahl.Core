@@ -79,18 +79,30 @@ abstract class Voting {
 
 
 	/**
-	 * @param VotingsContainer $container The container (Election or VotingGroup) this voting belongs to
+	 * Constructor for a voting. Either the election or the voting group have to be set, but not both.
+	 *
 	 * @param string $name
+	 * @param Election $election The election this voting belongs to
+	 * @param VotingGroup $votingGroup The group this voting belongs to.
+	 * @throws \RuntimeException
 	 */
-	public function __construct(VotingsContainer $container, $name) {
-		if ($container instanceof VotingGroup) {
-			$this->votingGroup = $container;
-		} else {
-			$this->election = $container;
+	public function __construct($name, Election $election = NULL, VotingGroup $votingGroup = NULL) {
+		if ($election !== NULL && $votingGroup !== NULL) {
+			throw new \RuntimeException('Cannot set both election and voting group for a voting.', 1403516216);
 		}
+		if ($election === NULL && $votingGroup === NULL) {
+			throw new \RuntimeException('One of election and voting group has to be set for a voting.', 1403516217);
+		}
+
+		$this->votingGroup = $votingGroup;
+		$this->election = $election;
 		$this->name = $name;
 
-		$this->election->addVoting($this);
+		if ($election) {
+			$this->election->addVoting($this);
+		} else {
+			$this->votingGroup->addVoting($this);
+		}
 	}
 
 	/**
@@ -105,6 +117,9 @@ abstract class Voting {
 	 * @return \AstaKit\FriWahl\Core\Domain\Model\Election
 	 */
 	public function getElection() {
+		if (!$this->election && $this->votingGroup) {
+			return $this->votingGroup->getElection();
+		}
 		return $this->election;
 	}
 
@@ -173,13 +188,6 @@ abstract class Voting {
 	 */
 	public function getDiscriminationMode() {
 		return $this->discriminationMode;
-	}
-
-	/**
-	 * @param \AstaKit\FriWahl\Core\Domain\Model\VotingGroup $group
-	 */
-	public function setGroup($group) {
-		$this->votingGroup = $group;
 	}
 
 	/**

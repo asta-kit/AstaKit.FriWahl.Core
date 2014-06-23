@@ -32,9 +32,12 @@ class VotingGroup extends Voting implements VotingsContainer {
 	 */
 	protected $votings;
 
-	public function __construct(VotingsContainer $container, $name) {
-		// TODO check if container is an Election – we don't support multiple nestings for voting groups
-		parent::__construct($container, $name);
+	/**
+	 * @param string $name
+	 * @param Election $election The election this voting belongs to
+	 */
+	public function __construct($name, Election $election) {
+		parent::__construct($name, $election);
 
 		$this->votings = new ArrayCollection();
 	}
@@ -53,7 +56,6 @@ class VotingGroup extends Voting implements VotingsContainer {
 	 */
 	public function addVoting(Voting $voting) {
 		$this->votings->add($voting);
-		$voting->setGroup($this);
 	}
 
 	/**
