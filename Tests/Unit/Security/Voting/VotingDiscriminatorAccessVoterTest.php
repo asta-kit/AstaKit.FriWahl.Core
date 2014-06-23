@@ -27,7 +27,7 @@ class VotingDiscriminatorAccessVoterTest extends UnitTestCase {
 
 		$mockedVoter = $this->getMock('AstaKit\FriWahl\Core\Domain\Model\EligibleVoter', array(), array(), '', FALSE);
 		$mockedVoting = $this->getMock('AstaKit\FriWahl\Core\Domain\Model\Voting', array(), array(), '', FALSE);
-		$mockedVoting->expects($this->atLeastOnce())->method('getDiscriminator')->will($this->returnValue(NULL));
+		$mockedVoting->expects($this->atLeastOnce())->method('getDiscriminator')->will($this->returnValue(''));
 
 		$this->assertFalse($accessVoter->canVote($mockedVoter, $mockedVoting));
 	}

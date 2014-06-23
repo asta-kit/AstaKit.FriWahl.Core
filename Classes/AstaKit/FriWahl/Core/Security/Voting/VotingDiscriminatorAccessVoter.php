@@ -27,7 +27,7 @@ class VotingDiscriminatorAccessVoter extends BaseVotingAccessVoter {
 	 */
 	public function canVote(EligibleVoter $voter, Voting $voting) {
 		// only let this voter decide on the voting if there is a discriminator
-		return $voting->getDiscriminator() !== NULL;
+		return $voting->getDiscriminator() !== '';
 	}
 
 	/**
