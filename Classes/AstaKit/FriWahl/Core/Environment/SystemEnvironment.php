@@ -19,10 +19,18 @@ use TYPO3\Flow\Annotations as Flow;
  */
 class SystemEnvironment {
 
-	protected $currentDate;
+	/**
+	 * The mocked datetime object
+	 *
+	 * @var \DateTime
+	 */
+	protected $mockedDate;
 
-	public function __construct() {
-		$this->currentDate = new \DateTime();
+	/**
+	 * @param \DateTime $mockedDate
+	 */
+	public function setMockedDate($mockedDate) {
+		$this->mockedDate = $mockedDate;
 	}
 
 	/**
@@ -31,6 +39,9 @@ class SystemEnvironment {
 	 * @return \DateTime
 	 */
 	public function getCurrentDate() {
-		return $this->currentDate;
+		if (!$this->mockedDate) {
+			return new \DateTime();
+		}
+		return $this->mockedDate;
 	}
 }

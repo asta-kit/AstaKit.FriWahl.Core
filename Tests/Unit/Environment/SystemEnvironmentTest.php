@@ -29,10 +29,21 @@ class SystemEnvironmentTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function getCurrentDateReturnsCurrentDateAfterFewSeconds() {
+		$systemEnvironment = new SystemEnvironment();
+
+		$this->assertEquals(new \DateTime(), $systemEnvironment->getCurrentDate());
+		sleep(2);
+		$this->assertEquals(new \DateTime(), $systemEnvironment->getCurrentDate());
+	}
+
+	/**
+	 * @test
+	 */
 	public function getCurrentDateReturnsSetDateIfDateWasSet() {
 		$systemEnvironment = new SystemEnvironment();
 		$mockDate = new \DateTime('+10 seconds');
-		$this->inject($systemEnvironment, 'currentDate', $mockDate);
+		$this->inject($systemEnvironment, 'mockedDate', $mockDate);
 
 		$this->assertEquals($mockDate, $systemEnvironment->getCurrentDate());
 	}
