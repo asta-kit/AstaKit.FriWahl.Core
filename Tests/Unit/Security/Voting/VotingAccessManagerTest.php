@@ -39,6 +39,7 @@ class VotingAccessManagerTest extends UnitTestCase {
 	public function mayParticipateReturnsFalseIfNoVoterIsDefined() {
 		$accessManager = new VotingAccessManager();
 		$accessManager->setAccessVoters(array());
+		$this->inject($accessManager, 'log', $this->getMock('TYPO3\Flow\Log\SystemLoggerInterface'));
 
 		$this->assertFalse($accessManager->mayParticipate($this->getMockedVoter(), $this->getMockedVoting()));
 	}
@@ -53,6 +54,7 @@ class VotingAccessManagerTest extends UnitTestCase {
 
 		$accessManager = new VotingAccessManager();
 		$accessManager->setAccessVoters(array($mockedAccessVoter));
+		$this->inject($accessManager, 'log', $this->getMock('TYPO3\Flow\Log\SystemLoggerInterface'));
 
 		$accessManager->mayParticipate($this->getMockedVoter(), $this->getMockedVoting());
 	}
@@ -67,6 +69,7 @@ class VotingAccessManagerTest extends UnitTestCase {
 
 		$accessManager = new VotingAccessManager();
 		$accessManager->setAccessVoters(array($mockedAccessVoter));
+		$this->inject($accessManager, 'log', $this->getMock('TYPO3\Flow\Log\SystemLoggerInterface'));
 
 		$this->assertTrue($accessManager->mayParticipate($this->getMockedVoter(), $this->getMockedVoting()));
 	}
@@ -94,6 +97,7 @@ class VotingAccessManagerTest extends UnitTestCase {
 
 		$accessManager = new VotingAccessManager();
 		$accessManager->setAccessVoters($mockedAccessVoters);
+		$this->inject($accessManager, 'log', $this->getMock('TYPO3\Flow\Log\SystemLoggerInterface'));
 
 		$this->assertFalse($accessManager->mayParticipate($this->getMockedVoter(), $this->getMockedVoting()));
 	}

@@ -8,6 +8,9 @@ namespace AstaKit\FriWahl\Core\Security\Voting;
 
 use AstaKit\FriWahl\Core\Domain\Model\Voting;
 use AstaKit\FriWahl\Core\Domain\Model\EligibleVoter;
+use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Log\Logger;
+use TYPO3\Flow\Log\SystemLoggerInterface;
 
 
 /**
@@ -26,6 +29,12 @@ class VotingAccessManager {
 	 * @var BaseVotingAccessVoter[]
 	 */
 	protected $accessVoters;
+
+	/**
+	 * @var SystemLoggerInterface
+	 * @Flow\Inject
+	 */
+	protected $log;
 
 	public function __construct() {
 		$this->accessVoters[] = new VotingDiscriminatorAccessVoter();
@@ -53,6 +62,12 @@ class VotingAccessManager {
 
 			$result = $accessVoter->mayParticipate($voter, $voting);
 			if ($result === FALSE) {
+				$this->log->log(sprintf("Access denied to voting %s for voter %s because of access voter %s",
+						$voting->getName(),
+						$voter->getName(),
+						get_class($accessVoter)
+					), LOG_DEBUG
+				);
 				// skip the next voters – access is denied if any of the voters denies it
 				return $result;
 			}
