@@ -57,6 +57,15 @@ class EligibleVoter {
 	 */
 	protected $election;
 
+	/**
+	 * The votes this voter has cast. This collection is read-only in this object, as new objects can only be created
+	 * by a stored procedure.
+	 *
+	 * @var Collection<Vote>
+	 * @ORM\OneToMany(mappedBy="voter", cascade={}, orphanRemoval=false)
+	 */
+	protected $votes;
+
 
 	/**
 	 * @param Election $election
@@ -68,6 +77,7 @@ class EligibleVoter {
 		$this->familyName = $familyName;
 
 		$this->discriminators = new ArrayCollection();
+		$this->votes = new ArrayCollection();
 
 		$this->election = $election;
 	}
@@ -149,6 +159,66 @@ class EligibleVoter {
 	 */
 	public function getDiscriminators() {
 		return $this->discriminators;
+	}
+
+	/**
+	 * Returns the list of votings this voter might participate in.
+	 *
+	 * @return Voting[]
+	 */
+	public function getVotings() {
+		$allowedVotings = array();
+
+		/** @var Voting $voting */
+		foreach ($this->election->getVotings() as $voting) {
+			if ($voting->isAllowedToParticipate($this)) {
+				$allowedVotings[] = $voting;
+			}
+		}
+		return $allowedVotings;
+	}
+
+	/**
+	 * Returns the votes this voter has cast.
+	 *
+	 * This is manually updated by the voting service when creating new votes;
+	 *
+	 * @return Vote[]
+	 */
+	public function getVotes() {
+		return $this->votes;
+	}
+
+	/**
+	 * Adds a new vote for this voter.
+	 *
+	 * This is a strictly internal method only used by the VotingService.
+	 * NEVER add a new vote object through this method.
+	 *
+	 * @param Vote $vote
+	 * @return void
+	 */
+	public function addVote(Vote $vote) {
+		$this->votes[] = $vote;
+	}
+
+	/**
+	 * Removes pending votes from the voter object.
+	 *
+	 * This is a strictly internal method only used by the VotingService.
+	 * NEVER call this manually unless you know what you're doing!
+	 *
+	 * @return int The number of removed vote objects
+	 */
+	public function removePendingVotes() {
+		$removedVotes = 0;
+		foreach ($this->votes as $vote) {
+			/** @var $vote Vote */
+			if ($vote->isQueued()) {
+				$this->votes->removeElement($vote);
+				++$removedVotes;
+			}
+		}
 	}
 
 }

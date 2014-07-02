@@ -6,6 +6,7 @@ namespace AstaKit\FriWahl\Core\Domain\Model;
  *                                                                        *
  *                                                                        */
 
+use AstaKit\FriWahl\Core\Domain\Repository\BallotBoxRepository;
 use TYPO3\Flow\Annotations as Flow;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -88,6 +89,12 @@ class BallotBox {
 	/** Ballot box has not been used */
 	const STATUS_UNUSED = 10;
 
+	/**
+	 * @var BallotBoxRepository
+	 * @Flow\Inject
+	 */
+	protected $ballotBoxRepository;
+
 
 	/**
 	 * @param $name
@@ -135,6 +142,15 @@ class BallotBox {
 	 */
 	public function getStatus() {
 		return $this->status;
+	}
+
+	/**
+	 * @return Vote[]
+	 */
+	public function getQueuedVotes() {
+		$pendingVotes = $this->ballotBoxRepository->findQueuedVotesForBallotBox($this);
+
+		return $pendingVotes;
 	}
 
 }
