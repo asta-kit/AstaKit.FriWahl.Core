@@ -1,5 +1,16 @@
 AstaKit:
   FriWahl:
+
+    # configuration example for the discriminators;
+#    discriminators:
+#      department:
+#        label: "Department"
+#        type: "string"
+#      matriculationNumber:
+#        label: "Matriculation number"
+#        type: "string"
+#        unique: true
+
     votingTypes:
       SingleList:
         className: 'AstaKit\FriWahl\Core\Domain\Model\SingleListVoting'
