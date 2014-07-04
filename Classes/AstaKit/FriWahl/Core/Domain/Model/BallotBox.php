@@ -103,6 +103,12 @@ class BallotBox {
 	 */
 	protected $ballotBoxRepository;
 
+	/**
+	 * @var string
+	 * @ORM\Column(length=1000)
+	 */
+	protected $sshPublicKey;
+
 
 	/**
 	 * @param string $identifier
@@ -121,6 +127,13 @@ class BallotBox {
 	 */
 	public function getIdentifier() {
 		return $this->identifier;
+	}
+
+	/**
+	 * @param string $name
+	 */
+	public function setName($name) {
+		$this->name = $name;
 	}
 
 	/**
@@ -168,6 +181,20 @@ class BallotBox {
 		$pendingVotes = $this->ballotBoxRepository->findQueuedVotesForBallotBox($this);
 
 		return $pendingVotes;
+	}
+
+	/**
+	 * @param string $sshPublicKey
+	 */
+	public function setSshPublicKey($sshPublicKey) {
+		$this->sshPublicKey = $sshPublicKey;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSshPublicKey() {
+		return $this->sshPublicKey;
 	}
 
 }
