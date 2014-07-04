@@ -54,7 +54,7 @@ class VotingServiceTest extends FunctionalTestCase {
 		$voter = new EligibleVoter($this->election, uniqid(), uniqid());
 		$this->persistenceManager->add($voter);
 
-		$ballotBox = new BallotBox(uniqid(), $this->election);
+		$ballotBox = new BallotBox(uniqid(), uniqid(), $this->election);
 		$this->persistenceManager->add($ballotBox);
 
 		$this->persistenceManager->persistAll();

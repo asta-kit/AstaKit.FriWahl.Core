@@ -23,6 +23,14 @@ use Doctrine\ORM\Mapping as ORM;
 class BallotBox {
 
 	/**
+	 * @var string
+	 * @Flow\Identity
+	 * @ORM\Id
+	 * @ORM\Column(length=40)
+	 */
+	protected $identifier;
+
+	/**
 	 * The name of this ballot box.
 	 *
 	 * @var string
@@ -97,13 +105,22 @@ class BallotBox {
 
 
 	/**
-	 * @param $name
+	 * @param string $identifier
+	 * @param string $name
 	 * @param Election $election
 	 */
-	public function __construct($name, Election $election) {
+	public function __construct($identifier, $name, Election $election) {
+		$this->identifier = $identifier;
 		$this->name     = $name;
 		$this->election = $election;
 		$this->election->addBallotBox($this);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getIdentifier() {
+		return $this->identifier;
 	}
 
 	/**
