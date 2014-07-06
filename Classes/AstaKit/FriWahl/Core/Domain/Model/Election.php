@@ -173,6 +173,20 @@ class Election implements VotingsContainer {
 	}
 
 	/**
+	 * @param string $ballotBoxIdentifier
+	 * @return bool
+	 */
+	public function hasBallotBox($ballotBoxIdentifier) {
+		/** @var $ballotBox BallotBox */
+		foreach ($this->ballotBoxes as $ballotBox) {
+			if ($ballotBox->getIdentifier() === $ballotBoxIdentifier) {
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+
+	/**
 	 * @param boolean $test
 	 */
 	public function setTest($test) {
