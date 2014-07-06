@@ -67,4 +67,14 @@ class VotingGroup extends Voting implements VotingsContainer {
 		return 'VotingGroup';
 	}
 
+	public function getDiscriminatorValues() {
+		$discriminatorValues = array();
+
+		/** @var Voting $voting */
+		foreach ($this->votings as $voting) {
+			$discriminatorValues = array_merge($discriminatorValues, $voting->getDiscriminatorValues());
+		}
+		return array_unique($discriminatorValues);
+	}
+
 }
