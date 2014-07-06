@@ -55,6 +55,20 @@ class ElectionRepository extends Repository {
 	}
 
 	/**
+	 * Returns all voters available for the given election
+	 *
+	 * @param Election $election
+	 * @return QueryResultInterface
+	 */
+	public function findVotersByElection(Election $election) {
+		$query = $this->createVotersQuery();
+
+		return $query->matching(
+			$query->equals('election', $election)
+		)->execute();
+	}
+
+	/**
 	 * Finds voters by the given criteria.
 	 *
 	 * @param Election $election
