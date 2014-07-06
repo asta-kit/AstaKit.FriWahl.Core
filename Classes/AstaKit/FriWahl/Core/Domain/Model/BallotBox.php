@@ -105,7 +105,7 @@ class BallotBox {
 
 	/**
 	 * @var string
-	 * @ORM\Column(length=1000)
+	 * @ORM\Column(length=1000, nullable=true)
 	 */
 	protected $sshPublicKey;
 
