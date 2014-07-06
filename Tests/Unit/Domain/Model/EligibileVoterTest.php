@@ -33,6 +33,16 @@ class EligibileVoterTest extends UnitTestCase {
 	}
 
 	/**
+	 * @return EligibleVoter
+	 */
+	protected function createVoterWithNameAndMatriculationNumber($givenName, $familyName, $matriculationNumber) {
+		$voter = new EligibleVoter($this->getMockedElection(), $givenName, $familyName);
+		$voter->addDiscriminator('matriculationNumber', $matriculationNumber);
+
+		return $voter;
+	}
+
+	/**
 	 * @test
 	 */
 	public function addDiscriminatorAddsDiscriminatorToList() {
@@ -80,4 +90,60 @@ class EligibileVoterTest extends UnitTestCase {
 
 		$this->assertFalse($voter->hasDiscriminator('baz'));
 	}
+
+	/**
+	 * @test
+	 */
+	public function identifierContainsMatriculationNumberAndCorrectLettersFromName() {
+		$voter = $this->createVoterWithNameAndMatriculationNumber('Abc', 'Xyz', 12345);
+
+		$this->assertEquals('12345AZ', $voter->getIdentifier());
+	}
+
+	public function umlautDataProvider() {
+		return array(
+			array("Ä", 'A'),
+			array('ä', 'A'),
+			array('Ö', 'O'),
+			array('ö', 'O'),
+			array('Ü', 'U'),
+			array('ü', 'U'),
+			array('ß', 'S'),
+			array('É', 'E'),
+			array('é', 'E'),
+			array('È', 'E'),
+			array('è', 'E'),
+			array('Æ', 'A'),
+			array('æ', 'A'),
+			array('Ø', 'O'),
+			array('ø', 'O'),
+		);
+	}
+
+	/**
+	 * @param string $umlaut
+	 * @param string $normalizedUmlaut
+	 *
+	 * @test
+	 * @dataProvider umlautDataProvider
+	 */
+	public function identifierContainsCorrectNormalizedFormOfUmlautInFirstName($umlaut, $normalizedUmlaut) {
+		$voter = $this->createVoterWithNameAndMatriculationNumber($umlaut . 'bc', 'Xyz', 12345);
+
+		$this->assertEquals('12345' . $normalizedUmlaut . 'Z', $voter->getIdentifier());
+	}
+
+	/**
+	 * @param string $umlaut
+	 * @param string $normalizedUmlaut
+	 *
+	 * @test
+	 * @dataProvider umlautDataProvider
+	 */
+	public function identifierContainsCorrectNormalizedFormOfUmlautInLastName($umlaut, $normalizedUmlaut) {
+		$voter = $this->createVoterWithNameAndMatriculationNumber('Abc', 'Xy' . $umlaut, 12345);
+
+		$this->assertEquals('12345A' . $normalizedUmlaut, $voter->getIdentifier());
+	}
+
 }

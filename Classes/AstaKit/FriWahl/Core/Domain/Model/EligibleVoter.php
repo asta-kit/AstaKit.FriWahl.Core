@@ -104,6 +104,39 @@ class EligibleVoter {
 	}
 
 	/**
+	 * Returns the election-unique identifier for this voter.
+	 *
+	 * @return string
+	 */
+	public function getIdentifier() {
+		$letters = mb_substr($this->getGivenName(), 0, 1, 'UTF-8')
+			. mb_substr($this->getFamilyName(), -1, 1, 'UTF-8');
+
+		$letters = strtr($letters,
+		array(
+			'Ä' => 'A',
+			'ä' => 'a',
+			'Ö' => 'O',
+			'ö' => 'o',
+			'Ü' => 'u',
+			'ü' => 'u',
+			'ß' => 's',
+			'È' => 'E',
+			'è' => 'e',
+			'É' => 'E',
+			'é' => 'e',
+			'Ø' => 'O',
+			'ø' => 'o',
+			'Æ' => 'A',
+			'æ' => 'a',
+		));
+
+		$letters = strtoupper($letters);
+
+		return $this->getDiscriminator('matriculationNumber')->getValue() . $letters;
+	}
+
+	/**
 	 * Returns the election this voter belongs to.
 	 *
 	 * @return \AstaKit\FriWahl\Core\Domain\Model\Election
