@@ -66,12 +66,12 @@ class ElectionRepository extends Repository {
 	public function findVotersByCriteria(Election $election, $criteria) {
 		$queryParameters = $queryParts = array();
 		if (isset($criteria['fields']['givenName']) && $criteria['fields']['givenName'] != '') {
-			$queryParameters['givenName'] = $criteria['fields']['givenName'];
-			$queryParts[] = 'v.givenName = :givenName';
+			$queryParameters['givenName'] = $criteria['fields']['givenName'] . '%';
+			$queryParts[] = 'v.givenName LIKE :givenName';
 		}
 		if (isset($criteria['fields']['familyName']) && $criteria['fields']['familyName'] != '') {
-			$queryParameters['familyName'] = $criteria['fields']['familyName'];
-			$queryParts[] = 'v.familyName = :familyName';
+			$queryParameters['familyName'] = $criteria['fields']['familyName'] . '%';
+			$queryParts[] = 'v.familyName LIKE :familyName';
 		}
 		if (count($queryParts) == 0) {
 			throw new \Exception('No criteria given for voter search', 1401630546);
