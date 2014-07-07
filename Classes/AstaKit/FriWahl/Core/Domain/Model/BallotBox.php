@@ -61,7 +61,7 @@ class BallotBox {
 	 * - 1 -> 2
 	 * - 2 -> 3
 	 * - 3 -> 2, 4
-	 * - 4 -> 5
+	 * - 4 -> 1, 5
 	 * - 5 -> 6
 	 * - 6 -> 7, 8, 9
 	 * - 7 -> 6
@@ -96,6 +96,33 @@ class BallotBox {
 	const STATUS_VOID = 9;
 	/** Ballot box has not been used */
 	const STATUS_UNUSED = 10;
+
+	/**
+	 * @var array
+	 */
+	protected static $statusTexts = array(
+		self::STATUS_NEW => 'new',
+		self::STATUS_EMITTED => 'emitted',
+		/** Currently open, new votes are accepted */
+		self::STATUS_OPENED => 'opened',
+		/** Closed, may be reopened */
+		self::STATUS_CLOSED => 'closed',
+		/** Ballot box has been returned to election committee */
+		self::STATUS_RETURNED => 'returned',
+		/** Ballot box is currently being counted */
+		self::STATUS_COUNTING => 'counting',
+		/** Ballot box was counted, awaiting confirmation of results */
+		self::STATUS_COUNTED => 'counted',
+		/** Ballot box is being counted again */
+		self::STATUS_RECOUNTING => 'recounting',
+		/** Counted and results are valid */
+		self::STATUS_VALID => 'valid',
+		/** Counted and results are invalid, i.e. the whole ballot box is void. Results won't be used for final election
+		 * results */
+		self::STATUS_VOID => 'void',
+		/** Ballot box has not been used */
+		self::STATUS_UNUSED => 'unused',
+	);
 
 	/**
 	 * @var BallotBoxRepository
@@ -175,6 +202,15 @@ class BallotBox {
 	}
 
 	/**
+	 * Returns the status as a text.
+	 *
+	 * @return string
+	 */
+	public function getStatusText() {
+		return self::$statusTexts[$this->status];
+	}
+
+	/**
 	 * @return Vote[]
 	 */
 	public function getQueuedVotes() {
@@ -195,6 +231,64 @@ class BallotBox {
 	 */
 	public function getSshPublicKey() {
 		return $this->sshPublicKey;
+	}
+
+	public function isNew() {
+		return $this->status === self::STATUS_NEW;
+	}
+
+	public function isEmitted() {
+		return $this->status === self::STATUS_EMITTED;
+	}
+
+	public function isReturned() {
+		return $this->status === self::STATUS_RETURNED;
+	}
+
+	/**
+	 * Emits this ballot box, making it available for voting sessions.
+	 *
+	 * @throws \RuntimeException
+	 */
+	public function emit() {
+		if (!$this->isReadyToBeEmitted()) {
+			throw new \RuntimeException('Cannot emit a box that is not new');
+		}
+		$this->status = self::STATUS_EMITTED;
+	}
+
+	/**
+	 * Returns a box to the election committee, making it unavailable for voting sessions.
+	 *
+	 * This method should have been called return, but that is a reserved keyword in PHP and cannot be used as a method
+	 * name.
+	 *
+	 * @throws \RuntimeException
+	 */
+	public function returnBox() {
+		if (!$this->isAvailableForVotingSession()) {
+			throw new \RuntimeException('Cannot return a box that is not available for voting.');
+		}
+		$this->status = self::STATUS_RETURNED;
+	}
+
+	/**
+	 * Returns TRUE if this ballot box is open for a voting session, i.e. a voting session could be started.
+	 * This also applies if there is an active voting session.
+	 *
+	 * @return bool
+	 */
+	public function isAvailableForVotingSession() {
+		return in_array($this->status, array(self::STATUS_EMITTED, self::STATUS_CLOSED, self::STATUS_OPENED));
+	}
+
+	/**
+	 * Returns TRUE if this ballot box can be emitted
+	 *
+	 * @return bool
+	 */
+	public function isReadyToBeEmitted() {
+		return in_array($this->status, array(self::STATUS_NEW, self::STATUS_RETURNED));
 	}
 
 }
