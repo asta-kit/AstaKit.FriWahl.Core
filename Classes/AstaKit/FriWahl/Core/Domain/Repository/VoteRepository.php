@@ -6,6 +6,8 @@ namespace AstaKit\FriWahl\Core\Domain\Repository;
  *                                                                        *
  *                                                                        */
 
+use AstaKit\FriWahl\Core\Domain\Model\Vote;
+use AstaKit\FriWahl\Core\Domain\Model\Voting;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\Repository;
 
@@ -21,4 +23,39 @@ use TYPO3\Flow\Persistence\Repository;
  * @Flow\Scope("singleton")
  */
 class VoteRepository extends Repository {
+
+	/**
+	 * Counts the queued votes for a given voting.
+	 *
+	 * @param Voting $voting
+	 * @return int
+	 */
+	public function countQueuedByVoting(Voting $voting) {
+		$query = $this->createQuery();
+
+		return $query->matching(
+			$query->logicalAnd(
+				$query->equals('voting', $voting),
+				$query->equals('status', Vote::STATUS_QUEUED)
+			)
+		)->count();
+	}
+
+	/**
+	 * Counts the committed votes for a given voting.
+	 *
+	 * @param Voting $voting
+	 * @return int
+	 */
+	public function countCommittedByVoting(Voting $voting) {
+		$query = $this->createQuery();
+
+		return $query->matching(
+			$query->logicalAnd(
+				$query->equals('voting', $voting),
+				$query->equals('status', Vote::STATUS_COMMITTED)
+			)
+		)->count();
+	}
+
 }
