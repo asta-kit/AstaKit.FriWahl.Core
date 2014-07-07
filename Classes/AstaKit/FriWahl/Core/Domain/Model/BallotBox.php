@@ -7,6 +7,7 @@ namespace AstaKit\FriWahl\Core\Domain\Model;
  *                                                                        */
 
 use AstaKit\FriWahl\Core\Domain\Repository\BallotBoxRepository;
+use AstaKit\FriWahl\Core\Domain\Repository\VoteRepository;
 use TYPO3\Flow\Annotations as Flow;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -131,6 +132,12 @@ class BallotBox {
 	protected $ballotBoxRepository;
 
 	/**
+	 * @var VoteRepository
+	 * @Flow\Inject
+	 */
+	protected $voteRepository;
+
+	/**
 	 * @var string
 	 * @ORM\Column(length=1000, nullable=true)
 	 */
@@ -217,6 +224,23 @@ class BallotBox {
 		$pendingVotes = $this->ballotBoxRepository->findQueuedVotesForBallotBox($this);
 
 		return $pendingVotes;
+	}
+
+	/**
+	 * Returns the number of queued votes.
+	 *
+	 * @return int
+	 */
+	public function getQueuedVotesCount() {
+		return $this->voteRepository->countQueuedByBallotBox($this);
+	}
+
+	/**
+	 * Returns the number of committed votes.
+	 * @return int
+	 */
+	public function getCommittedVotesCount() {
+		return $this->voteRepository->countCommittedByBallotBox($this);
 	}
 
 	/**

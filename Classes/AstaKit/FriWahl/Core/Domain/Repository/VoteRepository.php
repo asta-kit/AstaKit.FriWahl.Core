@@ -6,6 +6,7 @@ namespace AstaKit\FriWahl\Core\Domain\Repository;
  *                                                                        *
  *                                                                        */
 
+use AstaKit\FriWahl\Core\Domain\Model\BallotBox;
 use AstaKit\FriWahl\Core\Domain\Model\Vote;
 use AstaKit\FriWahl\Core\Domain\Model\Voting;
 use TYPO3\Flow\Annotations as Flow;
@@ -24,6 +25,17 @@ use TYPO3\Flow\Persistence\Repository;
  */
 class VoteRepository extends Repository {
 
+	protected function countVotesByFieldAndStatus($field, $fieldValue, $status) {
+		$query = $this->createQuery();
+
+		return $query->matching(
+			$query->logicalAnd(
+				$query->equals($field, $fieldValue),
+				$query->equals('status', $status)
+			)
+		)->count();
+	}
+
 	/**
 	 * Counts the queued votes for a given voting.
 	 *
@@ -31,14 +43,7 @@ class VoteRepository extends Repository {
 	 * @return int
 	 */
 	public function countQueuedByVoting(Voting $voting) {
-		$query = $this->createQuery();
-
-		return $query->matching(
-			$query->logicalAnd(
-				$query->equals('voting', $voting),
-				$query->equals('status', Vote::STATUS_QUEUED)
-			)
-		)->count();
+		return $this->countVotesByFieldAndStatus('voting', $voting, Vote::STATUS_QUEUED);
 	}
 
 	/**
@@ -48,14 +53,27 @@ class VoteRepository extends Repository {
 	 * @return int
 	 */
 	public function countCommittedByVoting(Voting $voting) {
-		$query = $this->createQuery();
+		return $this->countVotesByFieldAndStatus('voting', $voting, Vote::STATUS_COMMITTED);
+	}
 
-		return $query->matching(
-			$query->logicalAnd(
-				$query->equals('voting', $voting),
-				$query->equals('status', Vote::STATUS_COMMITTED)
-			)
-		)->count();
+	/**
+	 * Counts the queued votes for a given voting.
+	 *
+	 * @param BallotBox $ballotBox
+	 * @return int
+	 */
+	public function countQueuedByBallotBox(BallotBox $ballotBox) {
+		return $this->countVotesByFieldAndStatus('ballotBox', $ballotBox, Vote::STATUS_QUEUED);
+	}
+
+	/**
+	 * Counts the committed votes for a given ballot box.
+	 *
+	 * @param BallotBox $ballotBox
+	 * @return int
+	 */
+	public function countCommittedByBallotBox(BallotBox $ballotBox) {
+		return $this->countVotesByFieldAndStatus('ballotBox', $ballotBox, Vote::STATUS_COMMITTED);
 	}
 
 }
