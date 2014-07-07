@@ -9,6 +9,8 @@ namespace AstaKit\FriWahl\Core\Domain\Repository;
 use AstaKit\FriWahl\Core\Domain\Model\BallotBox;
 use AstaKit\FriWahl\Core\Domain\Model\Vote;
 use AstaKit\FriWahl\Core\Domain\Model\Voting;
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\QueryBuilder;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\Repository;
 
@@ -24,6 +26,13 @@ use TYPO3\Flow\Persistence\Repository;
  * @Flow\Scope("singleton")
  */
 class VoteRepository extends Repository {
+
+	/**
+	 * @Flow\Inject
+	 * @var \Doctrine\Common\Persistence\ObjectManager
+	 */
+	protected $entityManager;
+
 
 	protected function countVotesByFieldAndStatus($field, $fieldValue, $status) {
 		$query = $this->createQuery();
@@ -74,6 +83,32 @@ class VoteRepository extends Repository {
 	 */
 	public function countCommittedByBallotBox(BallotBox $ballotBox) {
 		return $this->countVotesByFieldAndStatus('ballotBox', $ballotBox, Vote::STATUS_COMMITTED);
+	}
+
+	/**
+	 * Counts the voters who have cast at least one vote in the given ballot box.
+	 *
+	 * @param BallotBox $ballotBox
+	 * @return int
+	 */
+	public function countVotersByBallotBox(BallotBox $ballotBox) {
+		/** @var QueryBuilder $queryBuilder */
+		$queryBuilder = $this->entityManager->createQueryBuilder();
+
+		$queryBuilder
+			->select('COUNT(DISTINCT vote.voter) as cnt')
+			->from('AstaKit\FriWahl\Core\Domain\Model\Vote', 'vote')
+			->where('vote.ballotBox = :ballotBox');
+
+		$query = $queryBuilder->getQuery();
+		$query->setParameter('ballotBox', $ballotBox);
+
+		$result = $query->getResult();
+		if (count($result) == 0) {
+			return 0;
+		} else {
+			return $result[0]['cnt'];
+		}
 	}
 
 }

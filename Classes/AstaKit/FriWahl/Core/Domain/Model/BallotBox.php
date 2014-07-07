@@ -218,6 +218,24 @@ class BallotBox {
 	}
 
 	/**
+	 * Returns the number of voters who have voted in this ballot box.
+	 *
+	 * @return int
+	 */
+	public function getVotersCount() {
+		return $this->voteRepository->countVotersByBallotBox($this);
+	}
+
+	/**
+	 * Returns the number of votes in the ballot box.
+	 *
+	 * @return int
+	 */
+	public function getVotesCount() {
+		return $this->voteRepository->countByBallotBox($this);
+	}
+
+	/**
 	 * @return Vote[]
 	 */
 	public function getQueuedVotes() {
