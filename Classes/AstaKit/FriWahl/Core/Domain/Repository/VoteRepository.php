@@ -99,7 +99,7 @@ class VoteRepository extends Repository {
 		$queryBuilder
 			->select('COUNT(DISTINCT vote.voter) as cnt')
 			->from('AstaKit\FriWahl\Core\Domain\Model\Vote', 'vote')
-			->where('vote.ballotBox = :ballotBox');
+			->where('vote.status = 2 AND vote.ballotBox = :ballotBox');
 
 		$query = $queryBuilder->getQuery();
 		$query->setParameter('ballotBox', $ballotBox);
@@ -123,7 +123,7 @@ class VoteRepository extends Repository {
 			->from('AstaKit\FriWahl\Core\Domain\Model\Vote', 'vote')
 			->leftJoin('AstaKit\FriWahl\Core\Domain\Model\EligibleVoter', 'voter', Join::WITH, 'vote.voter = voter')
 			->leftJoin('AstaKit\FriWahl\Core\Domain\Model\VoterDiscriminator', 'disc', Join::WITH, 'disc.voter = voter')
-			->where('vote.voting = :voting AND disc.identifier = :discriminator')
+			->where('vote.status = 2 AND vote.voting = :voting AND disc.identifier = :discriminator')
 			->groupBy('disc.value');
 
 		$query = $queryBuilder->getQuery();
