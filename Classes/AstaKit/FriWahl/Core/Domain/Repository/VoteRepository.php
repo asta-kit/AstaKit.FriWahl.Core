@@ -10,6 +10,7 @@ use AstaKit\FriWahl\Core\Domain\Model\BallotBox;
 use AstaKit\FriWahl\Core\Domain\Model\Vote;
 use AstaKit\FriWahl\Core\Domain\Model\Voting;
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Persistence\Repository;
@@ -109,6 +110,31 @@ class VoteRepository extends Repository {
 		} else {
 			return $result[0]['cnt'];
 		}
+	}
+
+	public function countByDiscriminatorValuesForVoting(Voting $voting) {
+		/** @var QueryBuilder $queryBuilder */
+		$queryBuilder = $this->entityManager->createQueryBuilder();
+
+		$discriminatorIdentifier = $voting->getDiscriminator();
+
+		$queryBuilder
+			->select('disc.value AS discriminator, COUNT(vote) AS cnt')
+			->from('AstaKit\FriWahl\Core\Domain\Model\Vote', 'vote')
+			->leftJoin('AstaKit\FriWahl\Core\Domain\Model\EligibleVoter', 'voter', Join::WITH, 'vote.voter = voter')
+			->leftJoin('AstaKit\FriWahl\Core\Domain\Model\VoterDiscriminator', 'disc', Join::WITH, 'disc.voter = voter')
+			->where('vote.voting = :voting AND disc.identifier = :discriminator')
+			->groupBy('disc.value');
+
+		$query = $queryBuilder->getQuery();
+		$query->setParameters(array(
+			'voting' => $voting,
+			'discriminator' => $discriminatorIdentifier,
+		));
+
+		$query->setHydrationMode(AbstractQuery::HYDRATE_ARRAY);
+		$result = $query->getResult();
+		return $result;
 	}
 
 }
