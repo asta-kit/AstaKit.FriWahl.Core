@@ -20,7 +20,6 @@ class Version20140508192839 extends AbstractMigration {
 		$this->addSql("CREATE TABLE astakit_friwahl_core_domain_model_eligiblevoter (
 			persistence_object_identifier VARCHAR(40) NOT NULL,
 			givenname VARCHAR(40) NOT NULL,
-			familyname VARCHAR(40) NOT NULL,
 			PRIMARY KEY(persistence_object_identifier)
 		) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
 

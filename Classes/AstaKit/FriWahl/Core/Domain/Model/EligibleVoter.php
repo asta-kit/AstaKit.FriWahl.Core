@@ -34,14 +34,6 @@ class EligibleVoter {
 	protected $givenName;
 
 	/**
-	 * The voter's family name.
-	 *
-	 * @var string
-	 * @ORM\Column(length=40)
-	 */
-	protected $familyName;
-
-	/**
 	 * Special properties of this user, e.g. the matriculation number, sex, nationality, field of study or department.
 	 *
 	 * @var Collection<\AstaKit\FriWahl\Core\Domain\Model\VoterDiscriminator>
@@ -70,11 +62,9 @@ class EligibleVoter {
 	/**
 	 * @param Election $election
 	 * @param string $givenName
-	 * @param string $familyName
 	 */
-	public function __construct($election, $givenName, $familyName) {
+	public function __construct($election, $givenName) {
 		$this->givenName = $givenName;
-		$this->familyName = $familyName;
 
 		$this->discriminators = new ArrayCollection();
 		$this->votes = new ArrayCollection();
@@ -92,15 +82,8 @@ class EligibleVoter {
 	/**
 	 * @return string
 	 */
-	public function getFamilyName() {
-		return $this->familyName;
-	}
-
-	/**
-	 * @return string
-	 */
 	public function getName() {
-		return $this->givenName . ' ' . $this->familyName;
+		return $this->givenName;
 	}
 
 	/**
@@ -110,7 +93,7 @@ class EligibleVoter {
 	 */
 	public function getIdentifier() {
 		$letters = mb_substr($this->getGivenName(), 0, 1, 'UTF-8')
-			. mb_substr($this->getFamilyName(), -1, 1, 'UTF-8');
+			. mb_substr($this->getGivenName(), -1, 1, 'UTF-8');
 
 		$letters = strtr($letters,
 		array(

@@ -83,10 +83,6 @@ class ElectionRepository extends Repository {
 			$queryParameters['givenName'] = $criteria['fields']['givenName'] . '%';
 			$queryParts[] = 'v.givenName LIKE :givenName';
 		}
-		if (isset($criteria['fields']['familyName']) && $criteria['fields']['familyName'] != '') {
-			$queryParameters['familyName'] = $criteria['fields']['familyName'] . '%';
-			$queryParts[] = 'v.familyName LIKE :familyName';
-		}
 		if (count($queryParts) == 0) {
 			throw new \Exception('No criteria given for voter search', 1401630546);
 		}

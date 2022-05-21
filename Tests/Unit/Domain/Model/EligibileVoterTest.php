@@ -35,8 +35,8 @@ class EligibileVoterTest extends UnitTestCase {
 	/**
 	 * @return EligibleVoter
 	 */
-	protected function createVoterWithNameAndMatriculationNumber($givenName, $familyName, $matriculationNumber) {
-		$voter = new EligibleVoter($this->getMockedElection(), $givenName, $familyName);
+	protected function createVoterWithNameAndMatriculationNumber($givenName, $matriculationNumber) {
+		$voter = new EligibleVoter($this->getMockedElection(), $givenName);
 		$voter->addDiscriminator('matriculationNumber', $matriculationNumber);
 
 		return $voter;
