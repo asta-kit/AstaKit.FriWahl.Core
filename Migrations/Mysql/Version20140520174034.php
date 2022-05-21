@@ -25,7 +25,7 @@ class Version20140520174034 extends AbstractMigration {
 			INDEX IDX_EE705BC9BFE59472 (proposal),
 			INDEX IDX_EE705BC9C8B28E44 (candidate),
 			PRIMARY KEY(persistence_object_identifier)
-		) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+		) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB");
 
 		$this->addSql("CREATE TABLE astakit_friwahl_core_domain_model_votingproposalsupporter (
 			persistence_object_identifier VARCHAR(40) NOT NULL,
@@ -36,7 +36,7 @@ class Version20140520174034 extends AbstractMigration {
 			INDEX IDX_2532BBD8BFE59472 (proposal),
 			INDEX IDX_2532BBD83F06E55 (supporter),
 			PRIMARY KEY(persistence_object_identifier)
-		) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+		) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB");
 
 		$this->addSql("CREATE TABLE astakit_friwahl_core_domain_model_votinggroup_votings_join (
 			core_votinggroup VARCHAR(40) NOT NULL,
@@ -45,13 +45,13 @@ class Version20140520174034 extends AbstractMigration {
 			INDEX IDX_CEED576E8DBC7A00 (core_votinggroup),
 			UNIQUE INDEX UNIQ_CEED576E5C74B90C (core_voting),
 			PRIMARY KEY(core_votinggroup, core_voting)
-		) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+		) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB");
 
 		$this->addSql("CREATE TABLE astakit_friwahl_core_domain_model_person (
 			persistence_object_identifier VARCHAR(40) NOT NULL,
 
 			PRIMARY KEY(persistence_object_identifier)
-		) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+		) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB");
 
 		$this->addSql("CREATE TABLE astakit_friwahl_core_domain_model_plebiscitequestion (
 			persistence_object_identifier VARCHAR(40) NOT NULL,
@@ -61,7 +61,7 @@ class Version20140520174034 extends AbstractMigration {
 
 			INDEX IDX_352EFDBCA22129A7 (plebiscite),
 			PRIMARY KEY(persistence_object_identifier)
-		) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+		) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB");
 
 		$this->addSql("CREATE TABLE astakit_friwahl_core_domain_model_votingproposal (
 			persistence_object_identifier VARCHAR(40) NOT NULL,
@@ -72,7 +72,7 @@ class Version20140520174034 extends AbstractMigration {
 
 			INDEX IDX_29697D7FFC28DA55 (voting),
 			PRIMARY KEY(persistence_object_identifier)
-		) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+		) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB");
 
 		$this->addSql("ALTER TABLE astakit_friwahl_core_domain_model_votingproposalcandidate
 			ADD CONSTRAINT FK_EE705BC9BFE59472

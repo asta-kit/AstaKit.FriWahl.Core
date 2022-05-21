@@ -124,7 +124,7 @@ END');
 
 			UNIQUE INDEX UNIQ_4151BA22268C4A59FC28DA55 (voter, voting),
 			PRIMARY KEY(id)
-		) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+		) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB");
 
 		$this->addSql("ALTER TABLE astakit_friwahl_core_domain_model_vote
 			ADD CONSTRAINT FK_4151BA22268C4A59
@@ -156,4 +156,3 @@ END');
 		$this->addSql("DROP TABLE astakit_friwahl_core_domain_model_vote");
 	}
 }
- 

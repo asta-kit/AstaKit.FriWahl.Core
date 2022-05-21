@@ -21,7 +21,7 @@ class Version20140508192839 extends AbstractMigration {
 			persistence_object_identifier VARCHAR(40) NOT NULL,
 			givenname VARCHAR(255) NOT NULL,
 			PRIMARY KEY(persistence_object_identifier)
-		) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+		) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB");
 
 		$this->addSql("CREATE TABLE astakit_friwahl_core_domain_model_voterdiscriminator (
 			persistence_object_identifier VARCHAR(40) NOT NULL,
@@ -31,7 +31,7 @@ class Version20140508192839 extends AbstractMigration {
 			INDEX IDX_83207C12268C4A59 (voter),
 			UNIQUE INDEX UNIQ_83207C12268C4A59772E836A (voter, identifier),
 			PRIMARY KEY(persistence_object_identifier)
-		) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB");
+		) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB");
 
 		$this->addSql("ALTER TABLE astakit_friwahl_core_domain_model_voterdiscriminator
 			ADD CONSTRAINT FK_83207C12268C4A59
